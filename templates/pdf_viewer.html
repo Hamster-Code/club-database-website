@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ filename }}</title> <!-- title of the page is the name of the file -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"> <!-- load the style css script -->
+</head>
+
+{% with messages = get_flashed_messages() %}
+    {% for message in messages %}
+        <p class="flash-message">{{ message }}</p>
+    {% endfor %}
+{% endwith %}
+
+<body>
+    <header>
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="logo" style="float:left;width:100px;height:100px;"><p>
+            <h1><a href="/">SRC</a></h1> <br>
+            Shasta Rocketry Club<br>
+            {% if user == None %}
+                <p>not logged in, clearance level 0 <a href="/login">[login]</a></p>
+            {% else %}
+                <p>logged in as {{ user }}, clearance level {{ level }} <a href="/logout">[logout]</a></p>
+            {% endif %}
+        </p>
+    </header>
+
+    <main class="container">
+        <h1>File: {{ filename }}</h1> <!-- render the filename-->
+        <a href="{{ url_for('files', name=parent_path) }}">[back]</a><br><br>
+
+        <iframe 
+            src="{{ url_for('getfile', name=name) }}" 
+            width="900" 
+            height="1000" 
+            style="border: none;">
+        </iframe>
+    </main>
+</body>
+
+</html>

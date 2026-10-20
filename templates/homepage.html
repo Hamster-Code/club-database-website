@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SRC</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+{% with messages = get_flashed_messages() %}
+    {% for message in messages %}
+        <p class="flash-message">{{ message }}</p>
+    {% endfor %}
+{% endwith %}
+
+<body>
+    <header>
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="logo" style="float:left;width:100px;height:100px;"><p>
+            <h1>SRC</h1> <br>
+            Shasta Rocketry Club<br>
+            {% if user == None %}
+                <p>not logged in, clearance level 0 <a href="/login">[login]</a></p>
+            {% else %}
+                <p>logged in as {{ user }}, clearance level {{ level }} <a href="/logout">[logout]</a></p>
+            {% endif %}
+        </p>
+    </header>
+
+    <main class="container">
+        <div class="bigbutton">
+            <a href="files/">files</a>
+        </div>
+    </main>
+
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Club Files</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+{% with messages = get_flashed_messages() %}
+    {% for message in messages %}
+        <p class="flash-message">{{ message }}</p>
+    {% endfor %}
+{% endwith %}
+
+<body>
+
+    <header>
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="logo" style="float:left;width:100px;height:100px;"><p>
+            <h1><a href="/">SRC</a></h1> <br>
+            Shasta Rocketry Club<br>
+            {% if user == None %}
+                <p>not logged in, clearance level 0 <a href="/login">[login]</a></p>
+            {% else %}
+                <p>logged in as {{ user }}, clearance level {{ level }} <a href="/logout">[logout]</a></p>
+            {% endif %}
+        </p>
+    </header>
+
+    <main class="container">
+        <h1>Files</h1>
+
+        <nav class="breadcrumbs">
+            <a href="{{ url_for('index') }}">files</a>
+
+            {% set accumulated_path = "" %}
+
+            {% for part in path_parts %}
+                <span>>></span>
+                {% if accumulated_path %}
+                    {% set accumulated_path = accumulated_path + "/" + part %}
+                {% else %}
+                    {% set accumulated_path = part %}
+                {% endif %}
+
+                <a href="{{ url_for('files', name=accumulated_path) }}">
+                    {{ part }}
+                </a>
+            {% endfor %}
+        </nav>
+
+        <form action="/upload" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="current_path" value="{{ current_path }}">
+            <input type="file" name="file">
+            <button type="submit">Upload</button>
+        </form>
+
+        <form action="/newfile" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="current_path" value="{{ current_path }}">
+            <button type="submit">New Text File</button>
+        </form>
+
+        <ul class="file-list">
+            {% for file in files %}
+                <li class="file-item">
+                    <span class="file-icon">{{files[file]}}</span>
+                    <a href="{{ url_for('files', name=current_path + '/' + file.name) }}">{{ file.name }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+
+    </main>
+</body>
+</html>

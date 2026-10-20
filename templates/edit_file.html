@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit {{ filename }}</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+{% with messages = get_flashed_messages() %}
+    {% for message in messages %}
+        <p class="flash-message">{{ message }}</p>
+    {% endfor %}
+{% endwith %}
+
+<body>
+
+    <header>
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="logo" style="float:left;width:100px;height:100px;"><p>
+            <h1><a href="/">SRC</a></h1> <br>
+            Shasta Rocketry Club<br>
+            {% if user == None %}
+                <p>not logged in, clearance level 0 <a href="/login">[login]</a></p>
+            {% else %}
+                <p>logged in as {{ user }}, clearance level {{ level }} <a href="/logout">[logout]</a></p>
+            {% endif %}
+        </p>
+    </header>
+
+    <main class="container">
+
+        <h1>Edit file: {{ filename }}</h1>
+
+        <form method="post", action="/rename" enctype="multipart/form-data">
+            <input type="hidden" name="current_path" value="{{ current_path }}">
+            <input class="line-edit" name="new name" value="{{ filename }}">
+            <button type="submit">rename</button>
+        </form>
+
+        <form method="post">
+
+            <textarea class="text-edit" name="content">{{ content }}</textarea>
+
+            <div>
+                <button type="submit">Save Changes</button>
+                <a href="/files/{{ name }}">Cancel</a>
+            </div>
+
+        </form>
+
+    </main>
+
+</body>
+</html>
